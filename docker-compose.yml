@@ -1,0 +1,31 @@
+name: immich-to-paperless
+
+services:
+  immich-to-paperless:
+    container_name: immich_to_paperless
+    image: python:3.11-slim
+    restart: "no"
+    # Connect to Immich's network to access the API
+    networks:
+      - immich_default
+    volumes:
+      # Mount Immich's upload directory (read-only)
+      # Use the SAME path as your Immich server
+      - /path/to/immich/upload:/immich-data:ro
+      # Mount Paperless consume folder
+      - /path/to/paperless/consume:/paperless-consume
+      # Mount the script
+      - ./immich_to_paperless.py:/script/immich_to_paperless.py:ro
+    environment:
+      IMMICH_API_URL: http://immich_server:2283/api
+      IMMICH_API_KEY: ${IMMICH_API_KEY}
+      IMMICH_DATA_PATH: /immich-data
+      PAPERLESS_CONSUME_PATH: /paperless-consume
+    command: >
+      sh -c "pip install requests &&
+             python3 /script/immich_to_paperless.py"
+
+# Join Immich's network to access the API
+networks:
+  immich_default:
+    external: true
