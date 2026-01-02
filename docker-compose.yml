@@ -11,13 +11,13 @@ services:
     volumes:
       # Mount Immich's upload directory (read-only)
       # Use the SAME path as your Immich server
-      - /path/to/immich/upload:/immich-data:ro
+      - ${IMMICH_DATA_PATH}:/immich-data:ro
       # Mount Paperless consume folder
-      - /path/to/paperless/consume:/paperless-consume
+      - ${PAPERLESS_CONSUME_PATH}:/paperless-consume
       # Mount the script
       - ./immich_to_paperless.py:/script/immich_to_paperless.py:ro
     environment:
-      IMMICH_API_URL: http://immich_server:2283/api
+      IMMICH_API_URL: ${IMMICH_API_URL}
       IMMICH_API_KEY: ${IMMICH_API_KEY}
       IMMICH_DATA_PATH: /immich-data
       PAPERLESS_CONSUME_PATH: /paperless-consume
